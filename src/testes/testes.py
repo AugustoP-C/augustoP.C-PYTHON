@@ -13,7 +13,7 @@ nav = webdriver.Chrome()
 nav.get("https://fast.com/pt/")
 wait = WebDriverWait(nav, 60)
 wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="show-more-details-link"]'))).click()
-time.sleep(1)
+time.sleep(2)
 dowl = nav.find_element("xpath", '//*[@id="speed-value"]').text
 time.sleep(40)
 upl = nav.find_element("xpath", '//*[@id="upload-value"]').text
