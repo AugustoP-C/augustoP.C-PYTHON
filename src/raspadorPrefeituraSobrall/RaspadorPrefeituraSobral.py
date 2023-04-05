@@ -1,12 +1,4 @@
-# 1 acessar a URL:http://transparencia.sobral.ce.gov.br/contrato/ano_exercicio:2023
-# 2 ??? ver a origem(identificação do campo na página de raspagem) e o
-# destino(identificação da coluna na tabela onde será gravado o dado)
-# 3 obeter os dados: numero, cpf/cnpj do fornecedor(cnpj/cpf_contratada), data do pedido
-# data inicial(data_inicio_vigencia) e data final (data_termino_vigencia), valor do pedido(valor_inicial),
-# orgão fiscalizador(orgão), fornecedor(nome do fornecedor)
-# 4 faser o raspador repetir esse processo com diferentes anos e diferentes telas
 # cnpj para testes: 07385282000131 https://portaldatransparencia.gov.br/pessoa-juridica/busca/lista?termo=07385282000131&pagina=1&tamanhoPagina=10&
-
 
 from selenium import webdriver
 import time
@@ -43,7 +35,34 @@ del ano_list[0]
 # print(portalT("07385282000131"))
 portalTV = portalT("07385282000131")
 print(portalTV)
+nav.get("http://transparencia.sobral.ce.gov.br/contrato/ano_exercicio:" + str(ano) + "/fornecedor:" + portalTV)
+
 for ano in ano_list:
     nav.get("http://transparencia.sobral.ce.gov.br/contrato/ano_exercicio:" + str(ano) + "/fornecedor:" + portalTV)
+    tabela = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]')
+    links_contatros = tabela.find_elements(By.TAG_NAME, 'a')
+    # for link in links_contatros:
+    #
+    # if link.get_attribute('href'):
+    #     if 'contrato/detail' in link.get_attribute('href'):
+    #         time.sleep(2)
+    #         nav.get(link.get_attribute('href'))
+    #         contrato = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div')
+    #         print(contrato.text)
+    #     else:
+    #         print("Contrato nao encontrado")
+    # Origem(identificação do campo na página de raspagem)
+    # Destino(identificação da coluna na tabela onde será gravado o dado)
+    # (Número) - (numero)
+    # (Fornecedor CPF/CNPJ) - (cnpj_contratada)
+    # (Data Inicial) – (data_inicio_vigencia)
+    # (Data Final) – (data_termino_vigencia)
+    # (Valor inicial) – (valor_inicial)
+    # (Secretaria) – (Órgão)
+    # (Fornecedor) – (Nome Fornecedor)
+    # (Colocar na tabela manualmente “Estadual" – (Esfera)
+    # (Colocar na tabela manualmente “Executivo” – (Poder)
+    # (Colocar na tabela manualmente “Sobral” – (UF Órgão)
+    # (Colocar na tabela manualmente “Sobral (CE)) contratos” – (Fonte)
     time.sleep(5)
 
