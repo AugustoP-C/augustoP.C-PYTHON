@@ -1,18 +1,17 @@
 # cnpj para testes: 07385282000131 https://portaldatransparencia.gov.br/pessoa-juridica/busca/lista?termo=07385282000131&pagina=1&tamanhoPagina=10&
 
+#imports
 from selenium import webdriver
 import time
 from selenium.common import TimeoutException
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-nav = webdriver.Chrome()
+nav = webdriver.Chrome()#NAVegador web
 
-def portalT(cnpj):
+def portalT(cnpj): #fução para pegar o nome da empresa usando o cnpj
     # pegar somente os doi primeiros nomes ao entra no portal da tranparencia
-    # WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.TAG_NAME, 'span')))
     nav.get("https://portaldatransparencia.gov.br/pessoa-juridica/busca/lista?termo=" + str(cnpj) +"&pagina=1&tamanhoPagina=10&")
     WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="resultados"]/li/h3/a'))).click()
     dropdown_cnpjN = WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.XPATH, '/html/body/main/div[2]/section[1]/div[2]/div[1]')))
@@ -21,6 +20,7 @@ def portalT(cnpj):
     nEmpresarial = n_list[0] + "+" + n_list[1]
     return nEmpresarial
 
+#entrando no saite de sobral e epgando os anos dispooniveis
 nav.get("http://transparencia.sobral.ce.gov.br/contrato/ano_exercicio:")
 WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="cookieConsentContainer"]/div[2]/a'))).click()
 WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".input-field:nth-child(1) > .select-wrapper"))).click()
@@ -32,15 +32,13 @@ for ano in anos:
     ano_list.append(ano.text)
 del ano_list[0]
 print(ano_list)
-# print(portalT("07385282000131"))
+
+#entrado no saite de sobral e pegando todos os dados
 portalTV = portalT("07385282000131")
 print(portalTV)
 nav.get("http://transparencia.sobral.ce.gov.br/contrato/ano_exercicio:" + str(ano) + "/fornecedor:" + portalTV)
 for ano in ano_list:
     nav.get("http://transparencia.sobral.ce.gov.br/contrato/ano_exercicio:" + str(ano) + "/fornecedor:" + portalTV)
-    # WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.TAG_NAME, 'a')))
-    # //*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]
-    # //*[@id="mainDiv"]/div[3]/div/div/div
     try:
         tabela_div = WebDriverWait(nav, 3).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]'))) #'//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]'
         if tabela_div:
