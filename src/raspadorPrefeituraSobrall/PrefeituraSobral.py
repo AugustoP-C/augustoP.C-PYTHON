@@ -12,8 +12,7 @@ nav = webdriver.Chrome()#NAVegador web
 
 def portalT(cnpj): #fução para pegar o nome da empresa usando o cnpj
     # pegar somente os doi primeiros nomes ao entra no portal da tranparencia
-    nav.get("https://portaldatransparencia.gov.br/pessoa-juridica/busca/lista?termo=" + str(cnpj) +"&pagina=1&tamanhoPagina=10&")
-    WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="resultados"]/li/h3/a'))).click()
+    nav.get("https://www.portaltransparencia.gov.br/busca/pessoa-juridica/" + str(cnpj))
     dropdown_cnpjN = WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.XPATH, '/html/body/main/div[2]/section[1]/div[2]/div[1]')))
     cnpjN = dropdown_cnpjN.find_element(By.TAG_NAME, 'span')
     n_list = cnpjN.text.split(" ")
