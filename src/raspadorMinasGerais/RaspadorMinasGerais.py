@@ -19,6 +19,7 @@ def portalT(cnpj): #fução para pegar o nome da empresa usando o cnpj
     n_list = cnpjN.text.split(" ")
     nEmpresarial = n_list[0] + " " + n_list[1]
     return nEmpresarial
+
 nEmpresarial = portalT("81243735000148")
 print(nEmpresarial)
 nav.get("https://www.transparencia.mg.gov.br/compras-e-patrimonio/compras-e-contratos/comprasecontratos-resultado-pesquisa-avancada")
@@ -44,35 +45,83 @@ for ano in list_ano:
     list_anos.append(ano.strip())
 print(list_anos)
 
+link = []
 for ano in list_anos:
     nav.get("https://www.transparencia.mg.gov.br/compras-e-patrimonio/compras-e-contratos/comprasecontratos-resultado-pesquisa-avancada/" + ano +"/01-01-" + ano + "/31-12-" + ano + "/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/" + propt + "/0/0/0/0/0/0/1/0/0/0/0/0/0/0/1/0/1/0/0/0")
-    time.sleep(10)
+    time.sleep(1)
     tdody = nav.find_element(By.XPATH, '//*[@id="tabela-paginada"]/tbody') # //*[@id="tabela-paginada"]/tbody/tr/td
     tr = tdody.find_elements(By.TAG_NAME, 'tr')
     for tag in tr:
         if tag.text != "Nenhum registro encontrado":
-            print("no ano de " + ano + " existe contrato: " + tag.text)
-            # # (Número) - (numero)
-            # numero = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[3]/div[2]')
-            # print("numero: " + numero.text)
-            # # (Fornecedor CPF/CNPJ) - (cnpj_contratada)
-            # fornecedor = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[10]/div[2]')
-            # print("fornecedor: " + fornecedor.text)
-            # # (Data Inicial) – (data_inicio_vigencia)
-            # dInicial = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[7]/div[2]')
-            # print("data inicial: " + dInicial.text)
-            # # (Data Final) – (data_termino_vigencia)
-            # dFinal = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[8]/div[2]')
-            # print("data final: " + dFinal.text)
-            # # (Valor inicial) – (valor_inicial)
-            # vInicial = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[11]/div[2]')
-            # print("valor inicial" + vInicial.text)
-            # # (Secretaria) – (Órgão)
-            # secretaria = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[1]/div[2]')
-            # print("secretaria : " + secretaria.text)
-            # # (Fornecedor) – (Nome Fornecedor)
-            # nFornecedor = nav.find_element(By.XPATH, '//*[@id="mainDiv"]/div[2]/div[2]/div/div/div[9]/div[2]/a')
-            # print("fornecedor: " + nFornecedor.text)
+            dropdown_links_contrato = tag.find_elements(By.CLASS_NAME, 'sorting_1')
+            for a in dropdown_links_contrato:
+                links_contrato = a.find_elements(By.TAG_NAME, 'a')
+            for links in links_contrato:
+                link.append(links.get_attribute('href'))
         else:
             print("Contrato nao encontrado, " + tag.text)
         print("-------------------------")
+
+nav.get(link)
+time.sleep(1)
+nCont = nav.find_element(By.XPATH, '//*[@id="detalhe-documento"]/div/table[4]/tbody/tr[10]/td')
+print(nCont.text)
+if nCont != "Nº do Contrato: ":
+    # Origen - saite // Destinio - tabela
+    # (N° Contrato) - (numero)
+    nContrato = nav.find_element(By.XPATH, '')
+    print("N° do contarto: " + nContrato.text)
+
+    # (CNPJ usado na busca) - (cnpj_contratada)
+    cnpj = nav.find_element(By.XPATH, '')
+    print("fornecedor: " + cnpj.text)
+
+    # (Data de Homologação) – (data_inicio_vigencia)
+    dHomologaçãoN = nav.find_element(By.XPATH, '')
+    print("data inicial: " + dHomologaçãoN.text)
+
+    # (Data de Homologação + 1 ano) – (data_termino_vigencia)
+    dHomologaçãoF = nav.find_element(By.XPATH, '')
+    print("data final: " + dHomologaçãoF.text)
+
+    # (Valor total Homologado) – (valor_inicial)
+    valorCompra = nav.find_element(By.XPATH, '')
+    print("valor inicial" + valorCompra.text)
+
+    # (Unidade Orçamentaria) – (Órgão)
+    unidade = nav.find_element(By.XPATH, '')
+    print("secretaria : " + unidade.text)
+
+    # (Fornecedor) – (Nome Fornecedor)
+    fornecedor = nav.find_element(By.XPATH, '')
+    print("fornecedor: " + fornecedor.text)
+
+#-----------------------------------------------------------------------------------------
+#Origen - saite // Destinio - tabela
+# # (N° Contrato) - (numero)
+# nContrato = nav.find_element(By.XPATH, '')
+# print("N° do contarto: " + nContrato.text)
+#
+# # (CNPJ usado na busca) - (cnpj_contratada)
+# cnpj = nav.find_element(By.XPATH, '')
+# print("fornecedor: " + cnpj.text)
+#
+# # (Data de Homologação) – (data_inicio_vigencia)
+# dHomologaçãoN = nav.find_element(By.XPATH, '')
+# print("data inicial: " + dHomologaçãoN.text)
+#
+# # (Data de Homologação + 1 ano) – (data_termino_vigencia)
+# dHomologaçãoF = nav.find_element(By.XPATH, '')
+# print("data final: " + dHomologaçãoF.text)
+#
+# # (Valor total Homologado) – (valor_inicial)
+# valorCompra = nav.find_element(By.XPATH, '')
+# print("valor inicial" + valorCompra.text)
+#
+# # (Unidade Orçamentaria) – (Órgão)
+# unidade = nav.find_element(By.XPATH, '')
+# print("secretaria : " + unidade.text)
+#
+# # (Fornecedor) – (Nome Fornecedor)
+# fornecedor = nav.find_element(By.XPATH, '')
+# print("fornecedor: " + fornecedor.text)
