@@ -100,3 +100,4 @@ for lk in link:
         fornecedor = nav.find_element(By.XPATH, '//*[@id="detalhe-documento"]/div/table[4]/tbody/tr[5]/td[1]')
         print("fornecedor: " + fornecedor.text)
 
+
