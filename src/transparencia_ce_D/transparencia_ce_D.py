@@ -67,11 +67,12 @@ def logger (logfile, info):
 #     id_pedido_fonte_dados = criar_pedido_fonte_dados(status, id_fonte_dados, id_pedido)
 #     dict_contratos_list = []
 
-# i = 1
+
 cnpj = 34635368000148
 url = f'https://cearatransparente.ce.gov.br/portal-da-transparencia/contratos/contratos?cod_concedente=+&cod_gestora=+&data_assinatura=&data_vigencia=&decricao_modalidade=+&descricao_situacaxdatalist-search_datalist=&locale=pt-BR&page=1000000&search={cnpj}&search_datalist=&search_sacc=&sort_column=integration_contracts_contracts.descricao_nome_credor&sort_direction=asc&tipo_objeto=+&__=__'
 #       https://cearatransparente.ce.gov.br/portal-da-transparencia/contratos/contratos?cod_concedente=+&cod_gestora=+&data_assinatura=&data_vigencia=&decricao_modalidade=+&descricao_situacaxdatalist-search_datalist=&locale=pt-BR&page={i}&search={cnpj}&search_datalist=&search_sacc=&sort_column=integration_contracts_contracts.descricao_nome_credor&sort_direction=asc&tipo_objeto=+&__=__'
 #       https://cearatransparente.ce.gov.br/portal-da-transparencia/contratos/contratos?cod_concedente=+&cod_gestora=+&data_assinatura=&data_vigencia=&decricao_modalidade=+&descricao_situacao=+&locale=pt-BR&page={i}&search={cnpj}&search_datalist=&search_sacc=&sort_column=integration_contracts_contracts.data_assinatura&sort_direction=asc&tipo_objeto=+&__=__
+url2 = f'https://cearatransparente.ce.gov.br/portal-da-transparencia/contratos/contratos?cod_concedente=+&cod_gestora=+&data_assinatura=&data_vigencia=&decricao_modalidade=+&descricao_situacaxdatalist-search_datalist=&locale=pt-BR&page=1000000&search=28123417000160&search_datalist=&search_sacc=&sort_column=integration_contracts_contracts.descricao_nome_credor&sort_direction=asc&tipo_objeto=+&__=__'
 
     #Inicializa o Chrome Linux
 
@@ -103,30 +104,24 @@ driver = webdriver.Chrome()
 # dropdown_numero_paginas = driver.find_element(By.XPATH, '/html/body/div[5]/div[6]/div/div/div[2]/div/div[2]/div/div[2]/div[5]/div/nav')
 # numero_paginas = dropdown_numero_paginas.find_element(By.CLASS_NAME, 'page current')
 # print(numero_paginas.text)
-
-requisicao = requests.get(url)
-soup = BeautifulSoup(requisicao.text, 'html.parser')
-time.sleep(10)
-dropdown_pages = soup.find_all("div", class_="row") #, class_="page current"
-# pages = dropdown_pages.find_all("div", class_="col-12")
-# dropdown_page_current = pages.find("nav")
-# page_current = dropdown_page_current.find("span", class_="page current")
-# print(dropdown_pages)
-a = 0
-for i in dropdown_pages:
-    a = a + 1
-    print(str(a) + " " + str(i))
-    print(" ")
-
-# contrato_dict = {
-#     'numero': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[1]/h2').text,
-#     'cnpj': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[2]/div[3]/div/p[1]').text,
-#     'data_inicio_vigencia': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[4]/div[2]/div/p[1]').text,
-#     'data_termino_vigencia': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[4]/div[3]/div/p[1]').text,
-#     'valor_inicial': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[5]/div[5]/div/p[1]').text,
-#     'orgao': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[3]/div[1]/div/p[1]').text,
-#     'nome_fornecedor': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[2]/div[2]/div/p[1]').text
-# }
+driver.get(url)
+time.sleep(5)
+dropdown_total_pages = driver.find_element(By.XPATH, '/html/body/div[5]/div[6]/div/div/div[2]/div/div[2]/div/div[2]/div[5]/div/nav').text
+total_pages = dropdown_total_pages.split("\n")
+print(total_pages)
+pages = total_pages[len(total_pages) - 1]
+print(type(pages))
+for i in range(int(pages)):
+    driver.get("https://cearatransparente.ce.gov.br/portal-da-transparencia/contratos/contratos?cod_concedente=+&cod_gestora=+&data_assinatura=&data_vigencia=&decricao_modalidade=+&descricao_situacaxdatalist-search_datalist=&locale=pt-BR&page=" + str(i + 1) + "&search=" + str(cnpj) + "&search_datalist=&search_sacc=&sort_column=integration_contracts_contracts.descricao_nome_credor&sort_direction=asc&tipo_objeto=+&__=__")
+    contrato_dict = {
+        'numero': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[1]/h2').text,
+        'cnpj': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[2]/div[3]/div/p[1]').text,
+        'data_inicio_vigencia': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[4]/div[2]/div/p[1]').text,
+        'data_termino_vigencia': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[4]/div[3]/div/p[1]').text,
+        'valor_inicial': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[5]/div[5]/div/p[1]').text,
+        'orgao': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[3]/div[1]/div/p[1]').text,
+        'nome_fornecedor': driver.find_element(By.XPATH, '/html/body/div[5]/div[3]/div/div[1]/div[2]/div[2]/div[2]/div/p[1]').text
+    }
 
             # dict_contratos_list.append(contrato_dict)
             #
