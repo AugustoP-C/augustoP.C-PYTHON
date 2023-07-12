@@ -41,8 +41,7 @@ for ano in ano_list:
     try:
         tabela_div = WebDriverWait(nav, 3).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]'))) #'//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]'
         if tabela_div:
-            tabela_numero = WebDriverWait(nav, 20).until(EC.visibility_of_element_located(
-                (By.XPATH, '//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]/table/tbody/tr/td[1]')))
+            tabela_numero = WebDriverWait(nav, 20).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="mainDiv"]/div[3]/div/div/div/div[2]/div[2]/table/tbody/tr/td[1]')))
             link_contatros = tabela_numero.find_element(By.TAG_NAME, 'a')
             # for link in links_contatros:
             # link.get_attribute('href')
